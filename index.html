@@ -1,11 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的项目主页</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      background: #0b0f14;
+      color: #e6edf3;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    .card {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .markdown-body {
+      background: transparent;
+      color: inherit;
+    }
+    .markdown-body a { color: #58a6ff; }
+    .markdown-body pre, .markdown-body code {
+      background: rgba(110, 118, 129, 0.2);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .hint {
+      opacity: 0.7;
+      font-size: 13px;
+    }
+  </style>
 </head>
+
 <body>
-    
+  <div class="container">
+    <div class="topbar">
+      <div class="title">项目说明（README）</div>
+      <div class="hint">GitHub Pages 渲染</div>
+    </div>
+
+    <div class="card">
+      <article id="content" class="markdown-body">正在加载 README.md ...</article>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <script>
+    async function loadReadme() {
+      const el = document.getElementById('content');
+      try {
+        const res = await fetch('./README.md', { cache: 'no-store' });
+        if (!res.ok) throw new Error('README.md 加载失败：' + res.status);
+        const md = await res.text();
+
+        el.innerHTML = marked.parse(md);
+
+        el.querySelectorAll('a[href]').forEach(a => {
+          const href = a.getAttribute('href') || '';
+          if (/^https?:\/\//i.test(href)) {
+            a.target = '_blank';
+            a.rel = 'noreferrer noopener';
+          }
+        });
+      } catch (err) {
+        el.textContent = String(err);
+      }
+    }
+
+    loadReadme();
+  </script>
 </body>
 </html>
