@@ -59,7 +59,7 @@
     </div>
 
     <div class="card">
-      <article id="content" class="markdown-body">正在加载 README.md ...</article>
+      <article id="content" class="markdown-body">正在加载 readme.md ...</article>
     </div>
   </div>
 
@@ -69,8 +69,11 @@
     async function loadReadme() {
       const el = document.getElementById('content');
       try {
-        const res = await fetch('./README.md', { cache: 'no-store' });
-        if (!res.ok) throw new Error('README.md 加载失败：' + res.status);
+        let res = await fetch('./readme.md', { cache: 'no-store' });
+        if (!res.ok) {
+          res = await fetch('./README.md', { cache: 'no-store' });
+        }
+        if (!res.ok) throw new Error('readme.md/README.md 加载失败：' + res.status);
         const md = await res.text();
 
         el.innerHTML = marked.parse(md);
